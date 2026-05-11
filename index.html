@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>maszyna losujaca projekty programiaste</title>
+  <meta name="description" content="Kiczowaty generator absurdalnych pomyslow na projekty programistyczne.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="page">
+    <section class="machine" aria-labelledby="title">
+      <div class="screen">
+        <p class="header" id="title">losowanie projektow programiaste</p>
+
+        <div class="reels" aria-live="polite">
+          <div class="box">
+            <span class="label">typ</span>
+            <span id="part-a">klik</span>
+          </div>
+          <div class="box">
+            <span class="label">dla kogo</span>
+            <span id="part-b">w guzior</span>
+          </div>
+          <div class="box">
+            <span class="label">po co</span>
+            <span id="part-c">i bedzie</span>
+          </div>
+        </div>
+
+        <div class="mascot" aria-hidden="true">
+          <div class="crt">
+            <div class="face">
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+          <p>pomyslik dla: <strong id="owner">programisty po kawie</strong></p>
+        </div>
+
+        <button id="draw" type="button">losuj</button>
+
+        <div class="bars" aria-hidden="true">
+          <div><span id="bar-a"></span></div>
+          <div><span id="bar-b"></span></div>
+          <div><span id="bar-c"></span></div>
+        </div>
+
+        <p class="progress" id="progress">czekanko - kliknij losuj</p>
+        <p class="result" id="result">tu wpadnie taki projekt ze senior usiadzie</p>
+        <p class="footer">to jest na zarty - inspirowane internetowym losowankiem, ale o kodziku</p>
+      </div>
+    </section>
+
+    <section class="side">
+      <div class="panel">
+        <p class="header small">instrukcja prawie powazna</p>
+        <p>naciskasz losuj i masz gotowy projekt na portfolio, hackaton, zaliczenie albo do folderu nigdy nie ruszac.</p>
+      </div>
+      <div class="panel">
+        <p class="header small">twoj stan</p>
+        <p id="stats">masz jeszcze czyste sumienie</p>
+      </div>
+      <div class="panel">
+        <p class="header small">ostrzezenie</p>
+        <p>maszyna nie bierze odpowiedzialnosci za frameworki, deploye, sprinty ani za to ze brzmi jak dobry pomysl.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

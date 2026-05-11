@@ -1,0 +1,280 @@
+:root {
+  color-scheme: dark;
+  --blood: #a80000;
+  --lime: #00ff00;
+  --blue: #000098;
+  --ink: #050505;
+  --paper: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.04), rgba(255,255,255,.04) 1px, transparent 1px, transparent 5px),
+    var(--blood);
+  color: var(--paper);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.4;
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+}
+
+.page {
+  width: min(1120px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 18px 0 28px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 18px;
+}
+
+.machine,
+.panel {
+  border: 4px dashed var(--lime);
+  text-align: center;
+  background: rgba(168, 0, 0, .94);
+  box-shadow: 0 0 0 5px rgba(0,0,0,.18), 0 16px 26px rgba(0,0,0,.35);
+}
+
+.screen {
+  padding: 14px;
+}
+
+.header {
+  margin: 6px auto 18px;
+  font-size: clamp(2rem, 5vw, 4.8rem);
+  font-weight: 400;
+  text-shadow: 3px 3px 0 #000;
+}
+
+.header.small {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.reels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.box {
+  min-height: 260px;
+  padding: 16px 12px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--blue);
+  background: linear-gradient(#fff, #777, #fff);
+  box-shadow: 0 0 22px #000;
+  overflow: hidden;
+}
+
+.box span:last-child {
+  width: 100%;
+  font-size: clamp(1.35rem, 2.7vw, 2.35rem);
+  font-weight: 700;
+  line-height: 1.08;
+  text-transform: lowercase;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+
+.label {
+  color: #111;
+  font-size: .8rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.mascot {
+  min-height: 118px;
+  margin: 18px auto 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.crt {
+  width: 110px;
+  height: 82px;
+  border: 5px solid #111;
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 52% 35%, rgba(255,255,255,.85), transparent 12%),
+    linear-gradient(135deg, #dcdcdc, #6f6f6f);
+  box-shadow: 12px 12px 24px rgba(0,0,0,.5);
+  position: relative;
+}
+
+.crt::before,
+.crt::after {
+  content: "";
+  position: absolute;
+  background: #111;
+}
+
+.crt::before {
+  width: 58px;
+  height: 8px;
+  left: 21px;
+  bottom: -16px;
+}
+
+.crt::after {
+  width: 84px;
+  height: 8px;
+  left: 8px;
+  bottom: -28px;
+}
+
+.face {
+  position: absolute;
+  inset: 16px 19px;
+  border: 3px solid #111;
+  background: #98ff98;
+}
+
+.face span {
+  position: absolute;
+  top: 19px;
+  width: 12px;
+  height: 12px;
+  background: #111;
+}
+
+.face span:first-child {
+  left: 15px;
+}
+
+.face span:last-child {
+  right: 15px;
+}
+
+.mascot p {
+  margin: 0;
+  font-size: clamp(1.2rem, 3vw, 2rem);
+}
+
+button {
+  margin: 18px auto;
+  padding: 12px 34px;
+  border: 4px dashed var(--lime);
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: clamp(2rem, 6vw, 4rem);
+  text-transform: lowercase;
+  box-shadow: 7px 7px 0 rgba(0,0,0,.35);
+}
+
+button:hover {
+  color: var(--lime);
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: .75;
+  transform: none;
+}
+
+.bars {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 10px;
+  margin: 0 auto 12px;
+}
+
+.bars div {
+  height: 30px;
+  background: #000;
+  overflow: hidden;
+}
+
+.bars span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--lime);
+  transition: width .08s linear;
+}
+
+.progress,
+.result {
+  margin: 12px auto;
+  max-width: 760px;
+}
+
+.progress {
+  font-size: 1.2rem;
+}
+
+.result {
+  min-height: 82px;
+  padding: 12px;
+  color: var(--lime);
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  line-height: 1.08;
+  text-shadow: 3px 3px 0 #000;
+}
+
+.footer {
+  margin: 18px 0 0;
+  font-size: .9rem;
+  font-style: italic;
+}
+
+.side {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+}
+
+.panel {
+  padding: 14px;
+}
+
+.panel p:not(.header) {
+  margin: 0;
+  font-size: 1.06rem;
+}
+
+@media (max-width: 860px) {
+  .page {
+    grid-template-columns: 1fr;
+  }
+
+  .side {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .reels,
+  .side {
+    grid-template-columns: 1fr;
+  }
+
+  .box {
+    min-height: 150px;
+  }
+
+  .bars {
+    grid-template-columns: 1fr;
+  }
+}
