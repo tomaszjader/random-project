@@ -83,6 +83,7 @@ const bars = {
 };
 
 const drawButton = document.querySelector("#draw");
+const saveButton = document.querySelector("#save");
 const owner = document.querySelector("#owner");
 const progress = document.querySelector("#progress");
 const result = document.querySelector("#result");
@@ -90,6 +91,7 @@ const stats = document.querySelector("#stats");
 
 let busy = false;
 let drawCount = Number(localStorage.getItem("programiaste-losowania") || "0");
+let latestIdea = "";
 
 function pick(items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -123,6 +125,133 @@ function setBars(a, b, c) {
   bars.c.style.width = c + "%";
 }
 
+function wrapCanvasText(context, text, maxWidth) {
+  const words = text.split(" ");
+  const lines = [];
+  let line = "";
+
+  words.forEach((word) => {
+    const nextLine = line ? `${line} ${word}` : word;
+
+    if (context.measureText(nextLine).width <= maxWidth) {
+      line = nextLine;
+      return;
+    }
+
+    if (line) lines.push(line);
+    line = word;
+  });
+
+  if (line) lines.push(line);
+  return lines;
+}
+
+function drawCenteredLines(context, lines, x, y, lineHeight) {
+  lines.forEach((line, index) => {
+    context.fillText(line, x, y + index * lineHeight);
+  });
+}
+
+function drawRoundRect(context, x, y, width, height, radius) {
+  context.beginPath();
+  context.moveTo(x + radius, y);
+  context.lineTo(x + width - radius, y);
+  context.quadraticCurveTo(x + width, y, x + width, y + radius);
+  context.lineTo(x + width, y + height - radius);
+  context.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  context.lineTo(x + radius, y + height);
+  context.quadraticCurveTo(x, y + height, x, y + height - radius);
+  context.lineTo(x, y + radius);
+  context.quadraticCurveTo(x, y, x + radius, y);
+  context.closePath();
+}
+
+function drawShadowText(context, text, x, y, fill, shadow, offset) {
+  context.fillStyle = shadow;
+  context.fillText(text, x + offset, y + offset);
+  context.fillStyle = fill;
+  context.fillText(text, x, y);
+}
+
+function drawIdeaCard(context, label, value, x, y, width, height) {
+  context.save();
+  context.shadowColor = "rgba(0, 0, 0, .65)";
+  context.shadowBlur = 22;
+  context.shadowOffsetX = 0;
+  context.shadowOffsetY = 8;
+  drawRoundRect(context, x, y, width, height, 26);
+  const cardFill = context.createLinearGradient(0, y, 0, y + height);
+  cardFill.addColorStop(0, "#f7f7f7");
+  cardFill.addColorStop(.5, "#bdbdbd");
+  cardFill.addColorStop(1, "#ffffff");
+  context.fillStyle = cardFill;
+  context.fill();
+  context.restore();
+
+  context.textAlign = "center";
+  context.textBaseline = "top";
+  context.fillStyle = "#111111";
+  context.font = "400 20px Arial, Helvetica, sans-serif";
+  context.fillText(label.toUpperCase(), x + width / 2, y + 54);
+
+  context.fillStyle = "#000098";
+  context.font = "700 44px Arial, Helvetica, sans-serif";
+  const lines = wrapCanvasText(context, value, width - 48);
+  const lineHeight = 52;
+  const valueTop = y + 116 - Math.max(0, lines.length - 2) * 18;
+  drawCenteredLines(context, lines, x + width / 2, valueTop, lineHeight);
+}
+
+function saveImage() {
+  if (!latestIdea) return;
+
+  const canvas = document.createElement("canvas");
+  const width = 1200;
+  const height = 900;
+  const context = canvas.getContext("2d");
+
+  canvas.width = width;
+  canvas.height = height;
+
+  const background = context.createLinearGradient(0, 0, 0, height);
+  background.addColorStop(0, "#b90000");
+  background.addColorStop(.45, "#990000");
+  background.addColorStop(1, "#650000");
+  context.fillStyle = background;
+  context.fillRect(0, 0, width, height);
+
+  context.strokeStyle = "#00ff00";
+  context.lineWidth = 7;
+  context.setLineDash([10, 9]);
+  context.strokeRect(28, 12, width - 56, height - 24);
+  context.setLineDash([]);
+
+  context.textAlign = "center";
+  context.textBaseline = "top";
+  context.font = "400 104px Arial, Helvetica, sans-serif";
+  drawShadowText(context, "losowanie projektow", width / 2, 78, "#ffffff", "#000000", 5);
+  drawShadowText(context, "programiaste", width / 2, 216, "#ffffff", "#000000", 5);
+
+  const cardY = 410;
+  const cardWidth = 356;
+  const cardHeight = 300;
+  const gap = 24;
+  const firstCardX = (width - cardWidth * 3 - gap * 2) / 2;
+
+  drawIdeaCard(context, "typ", parts.a.textContent, firstCardX, cardY, cardWidth, cardHeight);
+  drawIdeaCard(context, "dla kogo", parts.b.textContent, firstCardX + cardWidth + gap, cardY, cardWidth, cardHeight);
+  drawIdeaCard(context, "po co", parts.c.textContent, firstCardX + (cardWidth + gap) * 2, cardY, cardWidth, cardHeight);
+
+  context.fillStyle = "#ffffff";
+  context.font = "400 34px Arial, Helvetica, sans-serif";
+  drawShadowText(context, `pomyslik dla: ${owner.textContent}`, width / 2, 760, "#ffffff", "#000000", 3);
+
+  const link = document.createElement("a");
+  link.href = canvas.toDataURL("image/png");
+  link.download = `pomysl-programiasty-${Date.now()}.png`;
+  link.click();
+}
+
 function tick(slot, source) {
   parts[slot].textContent = pick(source);
   fitText(parts[slot]);
@@ -130,12 +259,14 @@ function tick(slot, source) {
 
 function finish() {
   const idea = `${parts.a.textContent} ${parts.b.textContent}, ${parts.c.textContent}`;
+  latestIdea = idea;
   result.textContent = idea;
   progress.textContent = pick(finalMessages);
   drawCount += 1;
   localStorage.setItem("programiaste-losowania", String(drawCount));
   stats.textContent = describeStats();
   drawButton.disabled = false;
+  saveButton.disabled = false;
   busy = false;
 }
 
@@ -144,6 +275,8 @@ function draw() {
 
   busy = true;
   drawButton.disabled = true;
+  saveButton.disabled = true;
+  latestIdea = "";
   result.textContent = "czekaj bo sie renderuje w glowie";
   progress.textContent = "start maszynki";
   owner.textContent = pick(owners);
@@ -173,3 +306,4 @@ stats.textContent = describeStats();
 fitAllParts();
 window.addEventListener("resize", fitAllParts);
 drawButton.addEventListener("click", draw);
+saveButton.addEventListener("click", saveImage);

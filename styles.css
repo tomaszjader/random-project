@@ -169,6 +169,14 @@ body {
   font-size: clamp(1.2rem, 3vw, 2rem);
 }
 
+.actions {
+  margin: 18px auto;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
 button {
   margin: 18px auto;
   padding: 12px 34px;
@@ -180,6 +188,14 @@ button {
   font-size: clamp(2rem, 6vw, 4rem);
   text-transform: lowercase;
   box-shadow: 7px 7px 0 rgba(0,0,0,.35);
+}
+
+.actions button {
+  margin: 0;
+}
+
+#save {
+  font-size: clamp(1.15rem, 3vw, 2.1rem);
 }
 
 button:hover {
