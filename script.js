@@ -2,7 +2,7 @@ const starters = [
   "aplikacja webowa",
   "bot konsolowy",
   "panel admina",
-  "sztuczna madrosc",
+  "sztuczna mądrość",
   "mikroserwisik",
   "edytor pikseli",
   "terminalowy kombajn",
@@ -18,36 +18,36 @@ const audiences = [
   "dla juniora po deployu",
   "dla avatara z githuba",
   "dla pani z dziekanatu",
-  "dla lodowki na websocketach",
-  "dla bossa od taskow",
+  "dla lodówki na websocketach",
+  "dla bossa od tasków",
   "dla kolegi co zna regex",
   "dla robota z piwnicy",
-  "dla zespolu na standupie",
-  "dla czlowieka od excela",
+  "dla zespołu na standupie",
+  "dla człowieka od excela",
   "dla testera smutnego",
   "dla chmury co pada"
 ];
 
 const endings = [
-  "ktory sortuje kanapki po humorze",
-  "ktory zamienia bugi w tapete",
-  "ktory robi deploy tylko jak mu ladnie poprosisz",
-  "ktory przewiduje czy commit byl pisany w panice",
-  "ktory wykrywa spaghetti zanim sie ugotuje",
-  "ktory losuje framework i od razu zaluje",
-  "ktory tlumaczy stack trace na poezje",
-  "ktory liczy czas do kolejnej zmiany wymagan",
-  "ktory udaje blockchain bez lancucha",
-  "ktory wysyla pull request do samego siebie",
-  "ktory robi refaktor przez potrzasanie monitorem",
-  "ktory zamienia TODO w motywacyjne plakaty"
+  "który sortuje kanapki po humorze",
+  "który zamienia bugi w tapetę",
+  "który robi deploy tylko jak go ładnie poprosisz",
+  "który przewiduje czy commit był pisany w panice",
+  "który wykrywa spaghetti zanim się ugotuje",
+  "który losuje framework i od razu żałuje",
+  "który tłumaczy stack trace na poezję",
+  "który liczy czas do kolejnej zmiany wymagań",
+  "który udaje blockchain bez łańcucha",
+  "który wysyła pull request do samego siebie",
+  "który robi refaktor przez potrząsanie monitorem",
+  "który zamienia TODO w motywacyjne plakaty"
 ];
 
 const owners = [
   "programisty po kawie",
   "architekta w polarze",
   "juniora od odwagi",
-  "seniora od westchniec",
+  "seniora od westchnięć",
   "scrum mastera z dzwonkiem",
   "backendu w kapciach",
   "frontendu z brokatem",
@@ -55,20 +55,22 @@ const owners = [
 ];
 
 const moods = [
-  "mieli pomysl",
+  "mieli pomysł",
   "trwa losowanko",
-  "maszyna mysli bardzo",
+  "maszyna myśli bardzo",
   "komputer robi brrr",
-  "framework sie wybiera",
+  "framework się wybiera",
   "deploy patrzy z oddali"
 ];
 
 const finalMessages = [
-  "losowanko zakonczone, jeszcze raz?",
-  "projekt gotowy, inwestor placze ze szczescia",
-  "mozna robic repo i udawac roadmap",
-  "maszyna powiedziala i juz tego nie cofnie"
+  "losowanko zakończone, jeszcze raz?",
+  "projekt gotowy, inwestor płacze ze szczęścia",
+  "można robić repo i udawać roadmap",
+  "maszyna powiedziała i już tego nie cofnie"
 ];
+
+const storageKey = "programiaste-losowania";
 
 const parts = {
   a: document.querySelector("#part-a"),
@@ -90,8 +92,26 @@ const result = document.querySelector("#result");
 const stats = document.querySelector("#stats");
 
 let busy = false;
-let drawCount = Number(localStorage.getItem("programiaste-losowania") || "0");
+let drawCount = readDrawCount();
 let latestIdea = "";
+
+function readDrawCount() {
+  try {
+    const storedValue = Number(window.localStorage.getItem(storageKey) || "0");
+    return Number.isFinite(storedValue) ? storedValue : 0;
+  } catch {
+    return 0;
+  }
+}
+
+function saveDrawCount() {
+  try {
+    window.localStorage.setItem(storageKey, String(drawCount));
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 function pick(items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -114,9 +134,9 @@ function fitAllParts() {
 
 function describeStats() {
   if (drawCount === 0) return "masz jeszcze czyste sumienie";
-  if (drawCount < 4) return "masz juz kilka podejrzanych pomyslow";
-  if (drawCount < 9) return "portfolio zaczyna pachniec przygoda";
-  return "to juz wyglada jak agencja kreatywna po awarii";
+  if (drawCount < 4) return "masz już kilka podejrzanych pomysłów";
+  if (drawCount < 9) return "portfolio zaczyna pachnieć przygodą";
+  return "to już wygląda jak agencja kreatywna po awarii";
 }
 
 function setBars(a, b, c) {
@@ -229,7 +249,7 @@ function saveImage() {
   context.textAlign = "center";
   context.textBaseline = "top";
   context.font = "400 104px Arial, Helvetica, sans-serif";
-  drawShadowText(context, "losowanie projektow", width / 2, 78, "#ffffff", "#000000", 5);
+  drawShadowText(context, "losowanie projektów", width / 2, 78, "#ffffff", "#000000", 5);
   drawShadowText(context, "programiaste", width / 2, 216, "#ffffff", "#000000", 5);
 
   const cardY = 410;
@@ -244,7 +264,7 @@ function saveImage() {
 
   context.fillStyle = "#ffffff";
   context.font = "400 34px Arial, Helvetica, sans-serif";
-  drawShadowText(context, `pomyslik dla: ${owner.textContent}`, width / 2, 760, "#ffffff", "#000000", 3);
+  drawShadowText(context, `pomyślik dla: ${owner.textContent}`, width / 2, 760, "#ffffff", "#000000", 3);
 
   const link = document.createElement("a");
   link.href = canvas.toDataURL("image/png");
@@ -263,8 +283,8 @@ function finish() {
   result.textContent = idea;
   progress.textContent = pick(finalMessages);
   drawCount += 1;
-  localStorage.setItem("programiaste-losowania", String(drawCount));
-  stats.textContent = describeStats();
+  const wasSaved = saveDrawCount();
+  stats.textContent = wasSaved ? describeStats() : `${describeStats()} (bez zapisu w przeglądarce)`;
   drawButton.disabled = false;
   saveButton.disabled = false;
   busy = false;
@@ -277,7 +297,7 @@ function draw() {
   drawButton.disabled = true;
   saveButton.disabled = true;
   latestIdea = "";
-  result.textContent = "czekaj bo sie renderuje w glowie";
+  result.textContent = "czekaj, bo się renderuje w głowie";
   progress.textContent = "start maszynki";
   owner.textContent = pick(owners);
   setBars(0, 0, 0);

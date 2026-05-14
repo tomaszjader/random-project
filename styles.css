@@ -86,9 +86,9 @@ body {
   font-weight: 700;
   line-height: 1.08;
   text-transform: lowercase;
-  overflow-wrap: normal;
+  overflow-wrap: anywhere;
   word-break: normal;
-  hyphens: none;
+  hyphens: auto;
 }
 
 .label {
@@ -201,6 +201,12 @@ button {
 button:hover {
   color: var(--lime);
   transform: translateY(-1px);
+}
+
+button:focus-visible {
+  outline: 4px solid var(--paper);
+  outline-offset: 5px;
+  color: var(--lime);
 }
 
 button:disabled {
