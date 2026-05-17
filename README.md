@@ -1,6 +1,7 @@
 # 🎰 Maszyna Losująca Projekty Programiaste
 
 Kiczowaty i humorystyczny generator absurdalnych pomysłów na projekty programistyczne. Zastanawiałeś się kiedyś, co zaimplementować do swojego portfolio, na hackathonie, albo "do szuflady"? Ta maszyna wyręczy Cię w myśleniu, losując projekty, od których "senior usiądzie".
+Projekt inspirowany twórczością **Klocucha** z YouTube oraz kultową **Maszyną do losowania tematów TV Gry**.
 
 ## ✨ Funkcje
 
