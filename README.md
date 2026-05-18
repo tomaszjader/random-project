@@ -30,3 +30,8 @@ To prosty projekt typu Vanilla Web. Nie wymaga żadnego etapu budowania ani inst
 ## ⚠️ Ostrzeżenie z instrukcji
 
 > Maszyna nie bierze odpowiedzialności za frameworki, deploye, sprinty ani za to, że pomysł brzmi jak dobry pomysł.
+
+## 🔗 Źródła i inspiracje
+
+- **Źródłowy film Klocucha o TV Gry:** [https://www.youtube.com/watch?v=H6qsJcALHkM](https://www.youtube.com/watch?v=H6qsJcALHkM)
+- **Rozwiązanie, na którym bazuje projekt:** [https://xarpl.github.io/losowanie-tv-gry/](https://xarpl.github.io/losowanie-tv-gry/)
