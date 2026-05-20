@@ -22,8 +22,9 @@
   <meta property="twitter:url" content="https://tomaszjader.github.io/random-project/">
   <meta property="twitter:title" content="Maszyna losująca projekty programiaste">
   <meta property="twitter:description" content="Kiczowaty generator absurdalnych pomysłów na projekty programistyczne.">
-  <meta property="twitter:image" content="https://tomaszjader.github.io/random-project/preview.png">
-
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -31,20 +32,33 @@
   <main class="page">
     <section class="machine" aria-labelledby="title">
       <div class="screen">
+        <div class="crt-overlay" aria-hidden="true"></div>
         <h1 class="header" id="title">losowanie projektów programiaste</h1>
 
         <div class="reels">
           <div class="box">
             <span class="label">typ</span>
-            <span id="part-a">klik</span>
+            <div class="reel-viewport">
+              <div class="reel-strip" id="part-a-strip">
+                <span id="part-a">klik</span>
+              </div>
+            </div>
           </div>
           <div class="box">
             <span class="label">dla kogo</span>
-            <span id="part-b">w guzior</span>
+            <div class="reel-viewport">
+              <div class="reel-strip" id="part-b-strip">
+                <span id="part-b">w guzior</span>
+              </div>
+            </div>
           </div>
           <div class="box">
             <span class="label">po co</span>
-            <span id="part-c">i bedzie</span>
+            <div class="reel-viewport">
+              <div class="reel-strip" id="part-c-strip">
+                <span id="part-c">i bedzie</span>
+              </div>
+            </div>
           </div>
         </div>
 

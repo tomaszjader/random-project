@@ -8,9 +8,19 @@ const starters = [
   "terminalowy kombajn",
   "plugin do niczego",
   "dashboard od czapy",
-  "symulator sprintu",
+  "simulator sprintu",
   "kompilator wymowek",
-  "generator README"
+  "generator README",
+  "inteligentna spłuczka",
+  "wyszukiwarka wymówek",
+  "generator fuszery",
+  "arkusz kalkulacyjny",
+  "system lojalnościowy",
+  "wirtualny kumpel",
+  "nakładka na windowsa",
+  "koparka smutku",
+  "antywirus w htmlu",
+  "kalkulator kredytowy"
 ];
 
 const audiences = [
@@ -25,7 +35,16 @@ const audiences = [
   "dla zespołu na standupie",
   "dla człowieka od excela",
   "dla testera smutnego",
-  "dla chmury co pada"
+  "dla chmury co pada",
+  "dla managera bez empatii",
+  "dla kota co chodzi po klawiaturze",
+  "dla bazy danych bez indeksów",
+  "dla stażysty w pierwszym dniu",
+  "dla gitlaba co ciągle leży",
+  "dla teściowej programisty",
+  "dla programisty php",
+  "dla sztucznej inteligencji",
+  "dla krowy na wypasie"
 ];
 
 const endings = [
@@ -40,7 +59,17 @@ const endings = [
   "który udaje blockchain bez łańcucha",
   "który wysyła pull request do samego siebie",
   "który robi refaktor przez potrząsanie monitorem",
-  "który zamienia TODO w motywacyjne plakaty"
+  "który zamienia TODO w motywacyjne plakaty",
+  "który kasuje kod przy każdym ostrzeżeniu lintera",
+  "który mierzy poziom stresu po sile uderzania w enter",
+  "który wysyła powiadomienia push o trzeciej w nocy",
+  "który uczy kłamać na rozmowie rekrutacyjnej",
+  "który zamienia spacje na tabulacje losowo przed commitem",
+  "który dodaje losowe średniki w plikach Pythona",
+  "który puszcza dźwięk bębna przy udanej kompilacji",
+  "który wysyła maile z przeprosinami do bazy danych",
+  "który działa tylko na komputerze dewelopera",
+  "który automatycznie pisze wypowiedzenie po piątym zebraniu"
 ];
 
 const owners = [
@@ -51,7 +80,12 @@ const owners = [
   "scrum mastera z dzwonkiem",
   "backendu w kapciach",
   "frontendu z brokatem",
-  "devopsa bez snu"
+  "devopsa bez snu",
+  "managera w koszuli",
+  "testera z lupą",
+  "stażysty z gaśnicą",
+  "sysadmina od restartu",
+  "analityka z excelem"
 ];
 
 const moods = [
@@ -60,14 +94,24 @@ const moods = [
   "maszyna myśli bardzo",
   "komputer robi brrr",
   "framework się wybiera",
-  "deploy patrzy z oddali"
+  "deploy patrzy z oddali",
+  "szukanie wolnego portu",
+  "czyszczenie cache",
+  "linter płacze cicho",
+  "stack overflow odpytywany",
+  "kawa się parzy",
+  "sprint się pali"
 ];
 
 const finalMessages = [
   "losowanko zakończone, jeszcze raz?",
   "projekt gotowy, inwestor płacze ze szczęścia",
   "można robić repo i udawać roadmap",
-  "maszyna powiedziała i już tego nie cofnie"
+  "maszyna powiedziała i już tego nie cofnie",
+  "sukces! teraz tylko 3 miesiące debugowania",
+  "gotowe! wystaw fakturę i uciekaj do lasu",
+  "napisane w 5 sekund, wdrażane przez rok",
+  "można dodawać do CV jako AI Specialist"
 ];
 
 const storageKey = "programiaste-losowania";
@@ -76,6 +120,12 @@ const parts = {
   a: document.querySelector("#part-a"),
   b: document.querySelector("#part-b"),
   c: document.querySelector("#part-c")
+};
+
+const strips = {
+  a: document.querySelector("#part-a-strip"),
+  b: document.querySelector("#part-b-strip"),
+  c: document.querySelector("#part-c-strip")
 };
 
 const bars = {
@@ -94,6 +144,63 @@ const stats = document.querySelector("#stats");
 let busy = false;
 let drawCount = readDrawCount();
 let latestIdea = "";
+
+// --- Web Audio API retro syntezator ---
+let audioCtx = null;
+
+function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+}
+
+function playBeep(freq, duration, type = 'square', volume = 0.08) {
+  try {
+    initAudio();
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+    gainNode.gain.setValueAtTime(volume, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  } catch (e) {
+    console.error("Audio error", e);
+  }
+}
+
+function playSpinSound() {
+  const freq = 250 + Math.random() * 150;
+  playBeep(freq, 0.05, 'square', 0.03);
+}
+
+function playStopSound() {
+  playBeep(180, 0.12, 'triangle', 0.12);
+  setTimeout(() => {
+    playBeep(140, 0.15, 'triangle', 0.08);
+  }, 35);
+}
+
+function playWinSound() {
+  const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
+  notes.forEach((freq, idx) => {
+    setTimeout(() => {
+      playBeep(freq, 0.3, 'square', 0.04);
+    }, idx * 80);
+  });
+}
+
+// --- Logika pomocnicza ---
 
 function readDrawCount() {
   try {
@@ -118,11 +225,18 @@ function pick(items) {
 }
 
 function fitText(element) {
-  const box = element.parentElement;
-  let size = 38;
+  const viewport = element.closest(".reel-viewport") || element.parentElement;
+  if (!viewport) return;
+  const maxHeight = viewport.clientHeight || 200;
+
+  const isMobile = window.innerWidth <= 680;
+  let size = isMobile ? 48 : 68;
+  const minSize = isMobile ? 26 : 36;
 
   element.style.fontSize = size + "px";
-  while ((element.scrollWidth > element.clientWidth || element.scrollHeight > box.clientHeight - 54) && size > 20) {
+  element.style.lineHeight = "0.95";
+  
+  while (element.scrollHeight > maxHeight - 4 && size > minSize) {
     size -= 1;
     element.style.fontSize = size + "px";
   }
@@ -211,13 +325,13 @@ function drawIdeaCard(context, label, value, x, y, width, height) {
   context.textAlign = "center";
   context.textBaseline = "top";
   context.fillStyle = "#111111";
-  context.font = "400 20px Arial, Helvetica, sans-serif";
+  context.font = "400 24px 'VT323', monospace";
   context.fillText(label.toUpperCase(), x + width / 2, y + 54);
 
   context.fillStyle = "#000098";
-  context.font = "700 44px Arial, Helvetica, sans-serif";
+  context.font = "700 52px 'VT323', monospace";
   const lines = wrapCanvasText(context, value, width - 48);
-  const lineHeight = 52;
+  const lineHeight = 48;
   const valueTop = y + 116 - Math.max(0, lines.length - 2) * 18;
   drawCenteredLines(context, lines, x + width / 2, valueTop, lineHeight);
 }
@@ -248,7 +362,7 @@ function saveImage() {
 
   context.textAlign = "center";
   context.textBaseline = "top";
-  context.font = "400 104px Arial, Helvetica, sans-serif";
+  context.font = "400 130px 'VT323', monospace";
   drawShadowText(context, "losowanie projektów", width / 2, 78, "#ffffff", "#000000", 5);
   drawShadowText(context, "programiaste", width / 2, 216, "#ffffff", "#000000", 5);
 
@@ -263,18 +377,13 @@ function saveImage() {
   drawIdeaCard(context, "po co", parts.c.textContent, firstCardX + (cardWidth + gap) * 2, cardY, cardWidth, cardHeight);
 
   context.fillStyle = "#ffffff";
-  context.font = "400 34px Arial, Helvetica, sans-serif";
+  context.font = "400 46px 'VT323', monospace";
   drawShadowText(context, `pomyślik dla: ${owner.textContent}`, width / 2, 760, "#ffffff", "#000000", 3);
 
   const link = document.createElement("a");
   link.href = canvas.toDataURL("image/png");
   link.download = `pomysl-programiasty-${Date.now()}.png`;
   link.click();
-}
-
-function tick(slot, source) {
-  parts[slot].textContent = pick(source);
-  fitText(parts[slot]);
 }
 
 function finish() {
@@ -293,6 +402,9 @@ function finish() {
 function draw() {
   if (busy) return;
 
+  // Aktywuj / wznów Audio Context
+  initAudio();
+
   busy = true;
   drawButton.disabled = true;
   saveButton.disabled = true;
@@ -302,24 +414,104 @@ function draw() {
   owner.textContent = pick(owners);
   setBars(0, 0, 0);
 
-  let step = 0;
-  const timer = window.setInterval(() => {
-    step += 1;
+  const targetA = pick(starters);
+  const targetB = pick(audiences);
+  const targetC = pick(endings);
 
-    if (step < 34) tick("a", starters);
-    if (step < 46) tick("b", audiences);
-    if (step < 58) tick("c", endings);
+  const durationA = 1800;
+  const durationB = 2600;
+  const durationC = 3400;
 
-    setBars(Math.min(step * 3, 100), Math.max(0, Math.min((step - 22) * 5, 100)), Math.max(0, Math.min((step - 38) * 5, 100)));
+  const setupReel = (slotKey, sourceArray, targetValue, duration) => {
+    const strip = strips[slotKey];
+    const viewport = strip.parentElement;
+    const itemHeight = viewport.clientHeight || 200;
+
+    // Resetuj stan paska
+    strip.style.transition = "none";
+    strip.style.transform = "translateY(0px)";
+    strip.classList.add("blur-spinning");
+
+    // Zostaw tylko pierwszy element
+    const currentSpan = strip.querySelector("span");
+    strip.innerHTML = "";
+    strip.appendChild(currentSpan);
+    fitText(currentSpan);
+
+    const numItems = 20;
+    
+    // Dodaj losowe opcje i na końcu właściwą wartość
+    for (let i = 1; i < numItems; i++) {
+      const span = document.createElement("span");
+      span.textContent = i === numItems - 1 ? targetValue : pick(sourceArray);
+      strip.appendChild(span);
+      fitText(span);
+    }
+
+    // Wymuś przeliczenie styli
+    strip.offsetHeight;
+
+    // Uruchom przejście
+    strip.style.transition = `transform ${duration}ms cubic-bezier(0.1, 0.8, 0.15, 1)`;
+    const offset = -(numItems - 1) * itemHeight;
+    strip.style.transform = `translateY(${offset}px)`;
+
+    // Pętla dźwięków kręcenia
+    let nextBeepTime = 40;
+    const startBeeps = (currentDelay) => {
+      if (!busy) return;
+      if (currentDelay > duration - 200) return;
+      
+      playSpinSound();
+      
+      const nextDelay = currentDelay + 8 + (currentDelay / duration) * 120;
+      setTimeout(() => startBeeps(nextDelay), nextDelay);
+    };
+    
+    setTimeout(() => startBeeps(nextBeepTime), nextBeepTime);
+
+    // Koniec kręcenia bębna
+    setTimeout(() => {
+      playStopSound();
+
+      // Zastąp pasek pojedynczym stałym elementem
+      strip.style.transition = "none";
+      strip.style.transform = "translateY(0px)";
+
+      const targetSpan = document.createElement("span");
+      targetSpan.id = "part-" + slotKey;
+      targetSpan.textContent = targetValue;
+      strip.innerHTML = "";
+      strip.appendChild(targetSpan);
+      fitText(targetSpan);
+
+      parts[slotKey] = targetSpan;
+      strip.classList.remove("blur-spinning");
+
+      // Paski postępu pod bębnami
+      if (slotKey === "a") setBars(100, 20, 10);
+      if (slotKey === "b") setBars(100, 100, 40);
+      if (slotKey === "c") {
+        setBars(100, 100, 100);
+        playWinSound();
+        finish();
+      }
+    }, duration);
+  };
+
+  setupReel("a", starters, targetA, durationA);
+  setupReel("b", audiences, targetB, durationB);
+  setupReel("c", endings, targetC, durationC);
+
+  // Zmiana napisów w tle podczas losowania
+  const infoTimer = setInterval(() => {
+    if (!busy) {
+      clearInterval(infoTimer);
+      return;
+    }
     progress.textContent = pick(moods);
     owner.textContent = pick(owners);
-
-    if (step >= 58) {
-      window.clearInterval(timer);
-      setBars(100, 100, 100);
-      finish();
-    }
-  }, 55);
+  }, 250);
 }
 
 stats.textContent = describeStats();

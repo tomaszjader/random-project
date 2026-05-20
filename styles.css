@@ -17,7 +17,7 @@ html {
     repeating-linear-gradient(0deg, rgba(255,255,255,.04), rgba(255,255,255,.04) 1px, transparent 1px, transparent 5px),
     var(--blood);
   color: var(--paper);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'VT323', monospace;
   line-height: 1.4;
 }
 
@@ -40,22 +40,44 @@ body {
   border: 4px dashed var(--lime);
   text-align: center;
   background: rgba(168, 0, 0, .94);
-  box-shadow: 0 0 0 5px rgba(0,0,0,.18), 0 16px 26px rgba(0,0,0,.35);
+  box-shadow: 0 0 0 5px rgba(0,0,0,.18), 0 16px 26px rgba(0,0,0,.35), 0 0 15px rgba(0, 255, 0, 0.35);
 }
 
 .screen {
   padding: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.crt-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
+  background-size: 100% 4px, 6px 100%;
+  opacity: 0.85;
+  animation: crt-flicker 0.15s infinite;
+}
+
+@keyframes crt-flicker {
+  0% { opacity: 0.82; }
+  50% { opacity: 0.88; }
+  100% { opacity: 0.82; }
 }
 
 .header {
   margin: 6px auto 18px;
-  font-size: clamp(2rem, 5vw, 4.8rem);
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
   font-weight: 400;
-  text-shadow: 3px 3px 0 #000;
+  text-shadow: 4px 4px 0 #000, 0 0 12px rgba(255, 255, 255, 0.3);
+  letter-spacing: 2px;
 }
 
 .header.small {
-  font-size: 1.8rem;
+  font-size: 2.2rem;
   margin-bottom: 10px;
 }
 
@@ -66,7 +88,7 @@ body {
 }
 
 .box {
-  min-height: 260px;
+  min-height: 300px;
   padding: 16px 12px;
   border-radius: 20px;
   display: flex;
@@ -75,27 +97,56 @@ body {
   justify-content: center;
   gap: 16px;
   color: var(--blue);
-  background: linear-gradient(#fff, #777, #fff);
+  background: linear-gradient(#fff, #bbb, #fff);
   box-shadow: 0 0 22px #000;
   overflow: hidden;
 }
 
-.box span:last-child {
+.reel-viewport {
   width: 100%;
-  font-size: clamp(1.35rem, 2.7vw, 2.35rem);
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+}
+
+.reel-strip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.box span:last-child,
+.reel-strip span {
+  width: 100%;
+  font-size: clamp(2.6rem, 4.4vw, 4.4rem);
   font-weight: 700;
-  line-height: 1.08;
+  line-height: 0.95;
   text-transform: lowercase;
   overflow-wrap: anywhere;
   word-break: normal;
   hyphens: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  text-align: center;
+  padding: 0 6px;
+}
+
+.blur-spinning {
+  filter: blur(2px);
 }
 
 .label {
   color: #111;
-  font-size: .8rem;
-  letter-spacing: 0;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
   text-transform: uppercase;
+  font-weight: bold;
 }
 
 .mascot {
@@ -154,6 +205,13 @@ body {
   width: 12px;
   height: 12px;
   background: #111;
+  animation: mascot-blink 4s infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes mascot-blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  93%, 95% { transform: scaleY(0.1); }
 }
 
 .face span:first-child {
@@ -166,7 +224,7 @@ body {
 
 .mascot p {
   margin: 0;
-  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-size: clamp(1.5rem, 3vw, 2.6rem);
 }
 
 .actions {
@@ -185,9 +243,11 @@ button {
   color: #fff;
   cursor: pointer;
   font: inherit;
-  font-size: clamp(2rem, 6vw, 4rem);
+  font-size: clamp(2.2rem, 6vw, 4.4rem);
   text-transform: lowercase;
   box-shadow: 7px 7px 0 rgba(0,0,0,.35);
+  text-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
+  transition: all 0.2s ease;
 }
 
 .actions button {
@@ -195,7 +255,7 @@ button {
 }
 
 #save {
-  font-size: clamp(1.15rem, 3vw, 2.1rem);
+  font-size: clamp(1.4rem, 3vw, 2.5rem);
 }
 
 button:hover {
@@ -293,7 +353,17 @@ button:disabled {
   }
 
   .box {
-    min-height: 150px;
+    min-height: 220px;
+  }
+
+  .reel-viewport {
+    height: 140px;
+  }
+
+  .box span:last-child,
+  .reel-strip span {
+    height: 140px;
+    font-size: clamp(2.2rem, 7vw, 3.2rem);
   }
 
   .bars {
