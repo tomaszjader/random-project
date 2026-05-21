@@ -10,6 +10,7 @@ Projekt inspirowany twórczością **Klocucha** z YouTube oraz kultową **Maszyn
   - **Dla kogo** (np. dla seniora bez myszy, dla lodówki na websocketach)
   - **Po co** (np. który zamienia bugi w tapetę, który robi deploy tylko jak ładnie poprosisz)
 - **Generowanie obrazka (Canvas API):** Wylosowałeś coś niesamowitego? Możesz wygenerować i pobrać gotowy obrazek ze swoim pomysłem - w pięknej oprawie graficznej przypominającej kiczowate automaty.
+- **Retro dźwięki losowania (Web Audio API):** Bębny pikają podczas kręcenia, zatrzymują się z syntetycznym stuknięciem i kończą krótką fanfarą.
 - **Śledzenie "Czystego Sumienia":** Aplikacja zapisuje w przeglądarce (LocalStorage) ilość wykonanych losowań i ocenia Twój stan - od "czystego sumienia" do "agencji kreatywnej po awarii".
 - **Dynamiczne dopasowanie tekstu:** Tekst automatycznie dopasowuje się do okienek maszyny, więc nic nie ucieka z interfejsu.
 
@@ -25,7 +26,7 @@ To prosty projekt typu Vanilla Web. Nie wymaga żadnego etapu budowania ani inst
 
 - **HTML5** - semantyczna struktura aplikacji
 - **CSS3** - stylowanie aplikacji, siatki, responsywność i animacje w CSS
-- **Vanilla JavaScript (ES6+)** - logika losowania, manipulacja DOM, generowanie grafiki za pomocą Canvas API i zapisywanie statystyk w LocalStorage.
+- **Vanilla JavaScript (ES6+)** - logika losowania, manipulacja DOM, generowanie grafiki za pomocą Canvas API, retro dźwięki przez Web Audio API i zapisywanie statystyk w LocalStorage.
 
 ## ⚠️ Ostrzeżenie z instrukcji
 
