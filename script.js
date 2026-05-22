@@ -280,6 +280,29 @@ function wrapCanvasText(context, text, maxWidth) {
   return lines;
 }
 
+function fitCanvasText(context, text, maxWidth, maxHeight) {
+  const maxFontSize = 52;
+  const minFontSize = 28;
+
+  for (let fontSize = maxFontSize; fontSize >= minFontSize; fontSize -= 2) {
+    context.font = `700 ${fontSize}px 'VT323', monospace`;
+
+    const lines = wrapCanvasText(context, text, maxWidth);
+    const lineHeight = Math.round(fontSize * .92);
+
+    if (lines.length * lineHeight <= maxHeight) {
+      return { fontSize, lineHeight, lines };
+    }
+  }
+
+  context.font = `700 ${minFontSize}px 'VT323', monospace`;
+  return {
+    fontSize: minFontSize,
+    lineHeight: Math.round(minFontSize * .92),
+    lines: wrapCanvasText(context, text, maxWidth)
+  };
+}
+
 function drawCenteredLines(context, lines, x, y, lineHeight) {
   lines.forEach((line, index) => {
     context.fillText(line, x, y + index * lineHeight);
@@ -307,6 +330,37 @@ function drawShadowText(context, text, x, y, fill, shadow, offset) {
   context.fillText(text, x, y);
 }
 
+function drawCrtOverlay(context, width, height) {
+  context.save();
+
+  context.fillStyle = "rgba(0, 0, 0, .18)";
+  for (let y = 0; y < height; y += 6) {
+    context.fillRect(0, y, width, 3);
+  }
+
+  const rgbGlow = context.createLinearGradient(0, 0, width, 0);
+  rgbGlow.addColorStop(0, "rgba(255, 0, 0, .08)");
+  rgbGlow.addColorStop(.5, "rgba(0, 255, 0, .03)");
+  rgbGlow.addColorStop(1, "rgba(0, 0, 255, .08)");
+  context.fillStyle = rgbGlow;
+  context.fillRect(0, 0, width, height);
+
+  const vignette = context.createRadialGradient(
+    width / 2,
+    height / 2,
+    height * .18,
+    width / 2,
+    height / 2,
+    width * .7
+  );
+  vignette.addColorStop(0, "rgba(0, 0, 0, 0)");
+  vignette.addColorStop(1, "rgba(0, 0, 0, .24)");
+  context.fillStyle = vignette;
+  context.fillRect(0, 0, width, height);
+
+  context.restore();
+}
+
 function drawIdeaCard(context, label, value, x, y, width, height) {
   context.save();
   context.shadowColor = "rgba(0, 0, 0, .65)";
@@ -329,11 +383,14 @@ function drawIdeaCard(context, label, value, x, y, width, height) {
   context.fillText(label.toUpperCase(), x + width / 2, y + 54);
 
   context.fillStyle = "#000098";
-  context.font = "700 52px 'VT323', monospace";
-  const lines = wrapCanvasText(context, value, width - 48);
-  const lineHeight = 48;
-  const valueTop = y + 116 - Math.max(0, lines.length - 2) * 18;
-  drawCenteredLines(context, lines, x + width / 2, valueTop, lineHeight);
+  const valueTop = y + 104;
+  const valueHeight = height - 132;
+  const fittedValue = fitCanvasText(context, value, width - 48, valueHeight);
+  const textHeight = fittedValue.lines.length * fittedValue.lineHeight;
+  const centeredValueTop = valueTop + Math.max(0, (valueHeight - textHeight) / 2);
+
+  context.font = `700 ${fittedValue.fontSize}px 'VT323', monospace`;
+  drawCenteredLines(context, fittedValue.lines, x + width / 2, centeredValueTop, fittedValue.lineHeight);
 }
 
 function saveImage() {
@@ -379,6 +436,8 @@ function saveImage() {
   context.fillStyle = "#ffffff";
   context.font = "400 46px 'VT323', monospace";
   drawShadowText(context, `pomyślik dla: ${owner.textContent}`, width / 2, 760, "#ffffff", "#000000", 3);
+
+  drawCrtOverlay(context, width, height);
 
   const link = document.createElement("a");
   link.href = canvas.toDataURL("image/png");
